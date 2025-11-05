@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Split Calculator</title>
+    <link rel="icon" type="image/x-icon" href="/img/creative.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Split The Bill 💰</h1>
+
+        <div id="person-inputs">
+            <h2>Persons & Amounts</h2>
+            <div class="person-group">
+                <input type="text" placeholder="Person Name 1" class="person-name">
+                <input type="number" placeholder="Amount Paid" class="person-amount" min="0" value="0">
+                <button class="lock-btn">Lock</button>
+            </div>
+            <button id="add-person-btn">➕ Add Person</button>
+        </div>
+
+        <div id="event-inputs">
+            <h2>Cost of Event</h2>
+            <div class="event-group">
+                <input type="text" placeholder="Event Name" class="event-name">
+                <input type="number" placeholder="Amount Cost" class="event-amount" min="0" value="0">
+                <button class="lock-btn">Lock</button>
+            </div>
+            <button id="add-event-btn">➕ Add Event</button>
+        </div>
+
+        <button id="calculate-btn">Calculate Split</button>
+
+        <div id="results" class="hidden">
+            <h2>🧾 Final Breakdown</h2>
+            <p>Total Given: <span id="total-given"></span></p>
+            <p>Total Bill: BDT <span id="total-bill">0.00</span></p>
+            <p>Total People: <span id="total-people">0</span></p>
+            <p>Equal Share per Person: BDT <span id="equal-share">0.00</span></p>
+
+            <h3>Who Owes / Gets Back</h3>
+            <ul id="payment-list">
+                </ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

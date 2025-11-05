@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
+}
+
+.person-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.event-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+input[type="text"], input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#add-person-btn {
+    background-color: #4CAF50;
+    color: white;
+    width: 80%;
+    margin-top: 15px;
+    text-align: center;
+}
+
+#add-event-btn {
+    background-color: #4CAF50;
+    color: white;
+    width: 80%;
+    margin-top: 15px;
+    text-align: center;
+}
+
+#calculate-btn {
+    background-color: #007bff;
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.lock-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* Styles for disabled/locked inputs */
+.locked input {
+    background-color: #eee;
+    pointer-events: none; /* Make input truly uneditable */
+}
+
+.locked .lock-btn {
+    background-color: #28a745;
+    color: white;
+    content: "Locked"; /* Note: content only works on ::before/::after */
+}
+
+.hidden {
+    display: none;
+}
+
+#payment-list {
+    list-style: none;
+    padding: 0;
+}
+
+#payment-list li {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-left: 5px solid;
+}
+
+.owes { border-color: #dc3545; background-color: #f8d7da; color: #721c24; }
+.gets { border-color: #28a745; background-color: #d4edda; color: #155724; }
+.even { border-color: #007bff; background-color: #cce5ff; color: #004085; }
