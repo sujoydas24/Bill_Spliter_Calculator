@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const equalShareSpan = document.getElementById('equal-share');
     const paymentList = document.getElementById('payment-list');
 
+    // Counters help with dynamic placeholder text (e.g., Person Name 3)
     let personCount = 1;
     let eventCount = 1;
 
@@ -24,24 +25,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // If no saved data, ensure there's at least one input for person and event
     if (document.querySelectorAll('.person-group').length === 0) {
-        addPersonInput(true);
+        // Add one initial person and event group, but don't save or increment until they are interacted with
+        addPersonInput(true); 
     }
     if (document.querySelectorAll('.event-group').length === 0) {
         addEventInput(true);
     }
 
-    // --- TEMPLATE GENERATION FUNCTIONS ---
+    // --- TEMPLATE GENERATION FUNCTIONS (Modified for Bootstrap) ---
 
     function createPersonGroup(name = '', amount = 0, isLocked = false) {
         personCount++;
         const group = document.createElement('div');
-        group.classList.add('person-group');
+        // Use row and g-2 (gutter 2) classes for responsiveness
+        group.classList.add('person-group', 'row', 'g-2', 'align-items-center', 'mb-2');
         if (isLocked) group.classList.add('locked');
 
         group.innerHTML = `
-            <input type="text" placeholder="Person Name ${personCount}" class="person-name" value="${name}">
-            <input type="number" placeholder="Amount Paid" class="person-amount" min="0" value="${amount}">
-            <button class="lock-btn">${isLocked ? '✅' : 'Lock'}</button>
+            <div class="col-12 col-md-5">
+                <input type="text" placeholder="Person Name ${personCount}" class="person-name form-control" value="${name}">
+            </div>
+            <div class="col-8 col-md-4">
+                <input type="number" placeholder="Amount Paid" class="person-amount form-control" min="0" value="${amount}">
+            </div>
+            <div class="col-4 col-md-3">
+                <button class="lock-btn btn btn-warning w-100">${isLocked ? '✅' : 'Lock'}</button>
+            </div>
         `;
 
         if (isLocked) {
@@ -55,13 +64,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function createEventGroup(name = '', amount = 0, isLocked = false) {
         eventCount++;
         const group = document.createElement('div');
-        group.classList.add('event-group');
+        // Use row and g-2 (gutter 2) classes for responsiveness
+        group.classList.add('event-group', 'row', 'g-2', 'align-items-center', 'mb-2');
         if (isLocked) group.classList.add('locked');
 
         group.innerHTML = `
-            <input type="text" placeholder="Event Name ${eventCount}" class="event-name" value="${name}">
-            <input type="number" placeholder="Amount Cost" class="event-amount" min="0" value="${amount}">
-            <button class="lock-btn">${isLocked ? '✅' : 'Lock'}</button>
+            <div class="col-12 col-md-5">
+                <input type="text" placeholder="Event Name ${eventCount}" class="event-name form-control" value="${name}">
+            </div>
+            <div class="col-8 col-md-4">
+                <input type="number" placeholder="Amount Cost" class="event-amount form-control" min="0" value="${amount}">
+            </div>
+            <div class="col-4 col-md-3">
+                <button class="lock-btn btn btn-warning w-100">${isLocked ? '✅' : 'Lock'}</button>
+            </div>
         `;
 
         if (isLocked) {
@@ -73,17 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addPersonInput(isInitial = false) {
+        // If initial load, the counter is reset later or kept low
         const newGroup = createPersonGroup('', 0, false);
         personInputsDiv.insertBefore(newGroup, addPersonBtn);
-        // Reset counter if it was just for placeholder text
-        if (isInitial) personCount = 1;
+        if (isInitial) personCount = 1; // Keep the placeholder at 'Person Name 1'
         saveData();
     }
 
     function addEventInput(isInitial = false) {
         const newGroup = createEventGroup('', 0, false);
         eventInputsDiv.insertBefore(newGroup, addEventBtn);
-        // Reset counter if it was just for placeholder text
         if (isInitial) eventCount = 1;
         saveData();
     }
@@ -93,10 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleLock(button) {
         const group = button.closest('.person-group') || button.closest('.event-group');
         
-        if (!group) return; // Safety check
+        if (!group) return; 
 
         const nameInput = group.querySelector('input[type="text"]');
         const amountInput = group.querySelector('input[type="number"]');
+        const isPersonGroup = group.classList.contains('person-group');
 
         if (group.classList.contains('locked')) {
             // Unlock
@@ -104,6 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
             nameInput.disabled = false;
             amountInput.disabled = false;
             button.textContent = 'Lock';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-warning');
         } else {
             // Lock - ensure name is not empty
             if (nameInput.value.trim() === '') {
@@ -114,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             nameInput.disabled = true;
             amountInput.disabled = true;
             button.textContent = '✅';
+            button.classList.remove('btn-warning');
+            button.classList.add('btn-success');
         }
         saveData(); // Save state after lock/unlock
     }
@@ -135,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lockedPersonGroups.forEach(group => {
             const name = group.querySelector('.person-name').value;
+            // Use parseFloat() and default to 0 for robustness
             const amount = parseFloat(group.querySelector('.person-amount').value) || 0; 
             
             totalGiven += amount;
@@ -169,11 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (balance > 0.01) {
                 // Paid more than their share -> Gets money back (Lender)
                 li.classList.add('gets');
-                li.textContent = `${person.name} GETS BACK BDT ${balance.toFixed(2)} (${person.name} is owed)`;
+                li.textContent = `${person.name} GETS BACK BDT ${balance.toFixed(2)}`;
             } else if (balance < -0.01) {
                 // Paid less than their share -> Owes money (Ower)
                 li.classList.add('owes');
-                li.textContent = `${person.name} OWES BDT ${Math.abs(balance).toFixed(2)} (${person.name}'s required payment)`;
+                li.textContent = `${person.name} OWES BDT ${Math.abs(balance).toFixed(2)}`;
             } else {
                 // Paid exactly the required share
                 li.classList.add('even');
@@ -205,8 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataToSave = {
             people,
             events,
-            personCount: personCount,
-            eventCount: eventCount
+            // Save current counter states
+            personCount: document.querySelectorAll('.person-group').length,
+            eventCount: document.querySelectorAll('.event-group').length
         };
         
         localStorage.setItem('billSplitData', JSON.stringify(dataToSave));
@@ -218,11 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = JSON.parse(savedData);
         
-        // Remove initial placeholder groups
+        // Remove the single placeholder groups that DOMContentLoaded might have added
         document.querySelectorAll('.person-group').forEach(el => el.remove());
         document.querySelectorAll('.event-group').forEach(el => el.remove());
 
-        // Update counters
+        // Update global counters based on saved count
         personCount = data.personCount || 0;
         eventCount = data.eventCount || 0;
 
@@ -230,20 +252,32 @@ document.addEventListener('DOMContentLoaded', () => {
         data.people.forEach(p => {
             const newGroup = createPersonGroup(p.name, p.amount, p.isLocked);
             personInputsDiv.insertBefore(newGroup, addPersonBtn);
+            
+            // Adjust button class when loading locked state
+            if (p.isLocked) {
+                newGroup.querySelector('.lock-btn').classList.remove('btn-warning');
+                newGroup.querySelector('.lock-btn').classList.add('btn-success');
+            }
         });
 
         // Rebuild Events
         data.events.forEach(e => {
             const newGroup = createEventGroup(e.name, e.amount, e.isLocked);
             eventInputsDiv.insertBefore(newGroup, addEventBtn);
+            
+            // Adjust button class when loading locked state
+            if (e.isLocked) {
+                newGroup.querySelector('.lock-btn').classList.remove('btn-warning');
+                newGroup.querySelector('.lock-btn').classList.add('btn-success');
+            }
         });
-
-        // Ensure the last generated group doesn't cause placeholder issues
-        if (data.people.length > 0) personCount = data.people.length;
-        if (data.events.length > 0) eventCount = data.events.length;
+        
+        // Reset counters for the *next* new input, based on actual loaded elements
+        personCount = document.querySelectorAll('.person-group').length;
+        eventCount = document.querySelectorAll('.event-group').length;
         
         // Automatically calculate if data was loaded and inputs exist
-        if (data.people.some(p => p.isLocked)) {
+        if (data.people.some(p => p.isLocked) || data.events.some(e => e.isLocked)) {
             calculateSplit();
         }
     }
