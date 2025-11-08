@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Result display elements
     const totalGivenSpan = document.getElementById('total-given');
+    const unspentAmountSpan = document.getElementById('unspent-amount');
     const totalBillSpan = document.getElementById('total-bill');
     const totalPeopleSpan = document.getElementById('total-people');
     const equalShareSpan = document.getElementById('equal-share');
@@ -175,6 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 4. Display Overall Results
         totalGivenSpan.textContent = `BDT ${totalGiven.toFixed(2)}`;
+        const unspentAmount = totalGiven - totalBill;
+        unspentAmountSpan.textContent = `BDT ${unspentAmount.toFixed(2)}`;
         totalBillSpan.textContent = totalBill.toFixed(2);
         totalPeopleSpan.textContent = numPeople;
         equalShareSpan.textContent = equalShare.toFixed(2);
